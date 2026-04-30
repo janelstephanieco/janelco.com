@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Janel Co</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon1.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #FFFDFA; color: #1c1c1a; cursor: none; }
+    a, button { cursor: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Cursor ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; border-radius: 50%;
+      pointer-events: none; z-index: 9999; opacity: 0;
+      width: 20px; height: 20px; background: rgba(254,228,228,0.81);
+      transition: opacity 0.2s, width 0.15s, height 0.15s, background 0.15s, transform 0.06s linear;
+    }
+    #cursor.visible { opacity: 1; }
+    #cursor.hovering { width: 26px; height: 26px; background: rgba(230,180,180,0.92); transform: translate(-3px,-3px); }
+
+    /* ══════════════════════════
+       NAV — matches homepage exactly
+    ══════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 72px; background: #FFFDFA;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 80px 16px;
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    nav.nav-hidden { transform: translateY(-100%); }
+    .nav-logo {
+      font-family: 'Hiragino Maru Gothic Pro','Hiragino Maru Gothic ProN','Meiryo',sans-serif;
+      font-size: 28px; font-weight: 400; color: #1c1c1a; text-decoration: none; line-height: 1;
+    }
+    .nav-right { display: flex; gap: 28px; align-items: center; }
+    .nav-link { font-size: 14px; font-weight: 400; color: #666; text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: #E99DAC !important; }
+
+    /* ══════════════════════════
+       LAYOUT
+    ══════════════════════════ */
+    /* constrained to match nav 許 ↔ Resume width */
+    .layout {
+      display: flex;
+      align-items: flex-start;
+      padding-top: 72px;
+      padding-left: 80px;
+      padding-right: 80px;
+    }
+
+    /* Sidebar — sticky, single left-aligned column */
+    .sidebar {
+      position: sticky; top: 72px; align-self: flex-start; flex-shrink: 0; width: 220px;
+      padding: 44px 24px 32px 0;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+      background: #FFFDFA; z-index: 50;
+    }
+    .sidebar-back {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 400; color: #aaa;
+      text-decoration: none; letter-spacing: 0.03em;
+      transition: color 0.2s;
+      position: static; margin: 0 0 24px 0;
+    }
+    .sidebar-back:hover { color: #1c1c1a !important; }
+    .sidebar-back:hover svg { transform: translateX(-3px); }
+    .sidebar-back svg { transition: transform 0.2s; }
+    .sidebar-eyebrow {
+      font-size: 10px; font-weight: 500; color: #c0bbb2;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      position: static; margin: 0 0 5px 0;
+    }
+    .sidebar-project {
+      font-size: 14px; font-weight: 500; color: #1c1c1a;
+      line-height: 1.35;
+      position: static; margin: 0 0 24px 0;
+    }
+    .sidebar-nav {
+      position: static;
+      display: flex; flex-direction: column; align-items: flex-start;
+      width: 100%; margin: 0; padding: 0;
+    }
+    .sidebar-nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 7px 0; text-decoration: none;
+      position: static; margin: 0;
+    }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+      background: #d4cfc8; transition: background 0.25s, transform 0.25s;
+    }
+    .sidebar-nav-item.active .dot { background: #E99DAC; transform: scale(1.3); }
+    .sidebar-nav-item:hover .dot { background: #F6C8D1; }
+    .dot-label {
+      font-size: 11px; font-weight: 400; color: #bbb8b2;
+      letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.25s;
+    }
+    .sidebar-nav-item.active .dot-label { color: #E99DAC; font-weight: 500; }
+    .sidebar-nav-item:hover .dot-label { color: #E99DAC !important; }
+
+    /* ── Main content ── */
+    .main { flex: 1; min-width: 0; padding: 0 0 0 52px; }
+
+    /* ══════════════════════════
+       PAGE HEADER
+    ══════════════════════════ */
+    .page-header { padding-top: 44px; padding-bottom: 52px; }
+    .project-title {
+      font-size: clamp(32px, 3.8vw, 48px); font-weight: 500;
+      letter-spacing: -0.03em; color: #1c1c1a;
+      line-height: 1.0; margin-bottom: 40px; white-space: nowrap;
+    }
+    .meta-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; }
+    .meta-col { padding: 0 24px; }
+    .meta-col:first-child { padding-left: 0; }
+    .meta-label {
+      font-size: 10px; font-weight: 500; color: #b8b4ac;
+      letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .meta-value { font-size: 15px; font-weight: 300; color: #1c1c1a; }
+
+    /* ── Hero ── */
+    .hero-card {
+      background: #FAFAFA; border-radius: 24px;
+      overflow: hidden;
+    }
+    .hero-card img {
+      width: 100%; display: block;
+    }
+
+    /* ══════════════════════════
+       SECTIONS
+    ══════════════════════════ */
+    .cs-section { padding-top: 88px; }
+
+    .section-eyebrow {
+      font-size: 10px; font-weight: 500; color: #b8b4ac;
+      letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 22px;
+    }
+    /* Full-width text — no max-width cap */
+    .section-body {
+      font-size: clamp(22px, 2.4vw, 28px); font-weight: 400;
+      color: #1c1c1a; line-height: 1.45; letter-spacing: -0.015em;
+    }
+    .section-body strong { font-weight: 600; }
+    .section-sub {
+      font-size: 17px; font-weight: 300; color: #7e7e7e;
+      line-height: 1.8; margin-top: 18px;
+    }
+
+    /* ── 3-col cards ── */
+    .cards-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 36px; }
+    .card { border-radius: 18px; padding: 30px 26px; background: #FAFAFA; }
+    .card-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 12px; color: #1c1c1a;
+    }
+    .card-text { font-size: 15px; font-weight: 300; color: #6a6a68; line-height: 1.65; }
+
+    /* ── Images — all same width ── */
+    .img-full { margin-top: 36px; border-radius: 20px; overflow: hidden; }
+    .img-full img { width: 100%; display: block; }
+    .img-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .img-pair > div { border-radius: 18px; overflow: hidden; }
+    .img-pair img { width: 100%; display: block; }
+
+    /* ══════════════════════════
+       VISUAL SYSTEM
+    ══════════════════════════ */
+    .vs-panel { background: #FAFAFA; border-radius: 24px; padding: 48px 52px; margin-top: 36px; }
+    .vs-title {
+      font-size: 10px; font-weight: 600; color: #888;
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .swatches { display: flex; gap: 8px; margin-bottom: 40px; }
+    .swatch { flex: 1; height: 156px; border-radius: 12px; position: relative; min-width: 0; }
+    .swatch span { position: absolute; top: 12px; left: 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; }
+    .sw-light span { color: #1c1c1a; }
+    .sw-dark span { color: rgba(255,255,255,0.85); }
+
+    /* Typography — no boxes */
+    .type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .type-item {}
+    .type-name { font-size: 11px; font-weight: 500; color: #aaa; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+    .type-big { font-size: 32px; font-weight: 500; color: #1c1c1a; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .type-role { font-size: 12px; color: #bbb; margin-bottom: 16px; }
+    .type-chars { font-size: 12px; color: #7e7e7e; line-height: 1.7; }
+
+    /* ══════════════════════════
+       LOGO
+    ══════════════════════════ */
+    .logo-caption {
+      font-size: 15px; font-weight: 300; color: #7e7e7e;
+      line-height: 1.75; margin-top: 20px;
+    }
+    .logo-compare-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; margin-top: 12px;
+    }
+    .logo-card {
+      background: #FAFAFA; border-radius: 18px; padding: 32px 28px;
+    }
+    .logo-card-label { font-size: 13px; font-weight: 500; color: #1c1c1a; margin-bottom: 20px; }
+    .logo-card-img {
+      display: flex; align-items: center; justify-content: center; min-height: 100px;
+    }
+    .logo-card-img img { max-height: 90px; max-width: 100%; object-fit: contain; }
+
+    /* ══════════════════════════
+       PROCESS
+    ══════════════════════════ */
+    .proc-brand { border-radius: 20px; overflow: hidden; margin-top: 36px; }
+    .proc-brand img { width: 100%; display: block; }
+
+    /* ══════════════════════════
+       PROTOTYPE PLACEHOLDER
+    ══════════════════════════ */
+    .proto-box {
+      margin-top: 36px; border-radius: 24px; overflow: hidden;
+      height: 600px;
+    }
+    .proto-box iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    /* ══════════════════════════
+       VIDEO DEMO PLACEHOLDER
+    ══════════════════════════ */
+    .video-box {
+      margin-top: 36px; background: #FAFAFA; border-radius: 24px;
+      height: 480px; display: flex; align-items: center; justify-content: center;
+    }
+    .video-inner { text-align: center; }
+    .video-label { font-size: 14px; font-weight: 400; color: #aaa; }
+    .video-sub { font-size: 12px; color: #c8c4bc; margin-top: 6px; }
+
+    /* ══════════════════════════
+       TAKEAWAYS
+    ══════════════════════════ */
+    .takeaways-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 52px; margin-top: 32px; align-items: start;
+    }
+    .takeaways-left {}
+    .takeaways-heading {
+      font-size: clamp(22px, 2.4vw, 28px); font-weight: 400;
+      color: #1c1c1a; letter-spacing: -0.015em; line-height: 1.4; margin-bottom: 20px;
+    }
+    .takeaways-text {
+      font-size: 17px; font-weight: 300; color: #7e7e7e; line-height: 1.8;
+    }
+    .takeaways-img { border-radius: 20px; overflow: hidden; }
+    .takeaways-img img { width: 100%; display: block; }
+
+    /* ══════════════════════════
+       PREV / NEXT — no box
+    ══════════════════════════ */
+    .proj-nav {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 64px 0 0;
+    }
+    .proj-prev, .proj-next {
+      text-decoration: none; color: #1c1c1a;
+      transition: color 0.2s;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .proj-prev:hover, .proj-next:hover { color: #E99DAC !important; }
+    .proj-next { align-items: flex-end; }
+    .proj-dir-label {
+      font-size: 10px; font-weight: 500; color: #b8b4ac;
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .proj-name-row {
+      font-size: 17px; font-weight: 400; letter-spacing: -0.01em;
+      color: #1c1c1a; display: flex; align-items: center; gap: 7px;
+      transition: color 0.2s;
+    }
+    .proj-prev:hover .proj-name-row,
+    .proj-next:hover .proj-name-row { color: #E99DAC; }
+
+    /* ══════════════════════════
+       FOOTER — full-width, outside layout
+    ══════════════════════════ */
+    .site-footer {
+      border-top: 1px solid #e8e4dc; padding: 24px 80px;
+      margin-top: 80px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #FFFDFA; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-left {
+      font-size: 10.5px; color: #aaa; letter-spacing: 0.09em;
+      text-transform: uppercase; font-weight: 400;
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: #555; text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: #E99DAC !important; }
+
+    /* ══════════════════════════
+       ANIMATIONS
+    ══════════════════════════ */
+    .rev { opacity: 0; transform: translateY(22px); transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1); }
+    .rev.show { opacity: 1; transform: none; }
+    .rev-img { opacity: 0; transform: scale(0.98); transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+    .rev-img.show { opacity: 1; transform: scale(1); }
+
+    /* ══════════════════════════
+       RESPONSIVE
+    ══════════════════════════ */
+    @media (max-width: 1024px) {
+      .layout { padding-left: 32px; padding-right: 32px; }
+      .sidebar { display: none; }
+      .main { padding: 0; }
+      nav { padding: 0 32px 16px; }
+      .project-title { white-space: normal; }
+      .meta-row { grid-template-columns: repeat(2,1fr); gap: 24px; }
+      .meta-col { padding: 0; }
+      .cards-3, .type-row, .logo-compare-row, .takeaways-grid { grid-template-columns: 1fr; }
+      .img-pair { grid-template-columns: 1fr; }
+      .site-footer { padding: 24px 32px; }
+    }
+    @media (max-width: 600px) {
+      .main { padding: 0 20px 0; }
+      nav { padding: 0 20px 16px; }
+      .site-footer { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+<div id="cursor"></div>
+
+<!-- Nav — matches homepage -->
+<nav>
+  <a href="index.html" class="nav-logo">許</a>
+  <div class="nav-right">
+    <a href="about.html" class="nav-link">About</a>
+    <a href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" class="nav-link">Resume</a>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- ═══════ SIDEBAR ═══════ -->
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-back">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2L4 6.5l4 4.5"/></svg>
+      Back to Projects
+    </a>
+    <div class="sidebar-eyebrow">Case Study</div>
+    <div class="sidebar-project">Food Stash Foundation</div>
+    <nav class="sidebar-nav">
+      <a href="#overview"  class="sidebar-nav-item" data-section="overview"><span class="dot"></span><span class="dot-label">Overview</span></a>
+      <a href="#gap"       class="sidebar-nav-item" data-section="gap"><span class="dot"></span><span class="dot-label">The Problem</span></a>
+      <a href="#solution"  class="sidebar-nav-item" data-section="solution"><span class="dot"></span><span class="dot-label">The Solution</span></a>
+      <a href="#visual"    class="sidebar-nav-item" data-section="visual"><span class="dot"></span><span class="dot-label">Visual System</span></a>
+      <a href="#process"   class="sidebar-nav-item" data-section="process"><span class="dot"></span><span class="dot-label">The Process</span></a>
+      <a href="#designs"   class="sidebar-nav-item" data-section="designs"><span class="dot"></span><span class="dot-label">Final Designs</span></a>
+      <a href="#video"     class="sidebar-nav-item" data-section="video"><span class="dot"></span><span class="dot-label">Video Demo</span></a>
+      <a href="#takeaways" class="sidebar-nav-item" data-section="takeaways"><span class="dot"></span><span class="dot-label">Takeaways</span></a>
+    </nav>
+  </aside>
+
+  <!-- ═══════ MAIN ═══════ -->
+  <main class="main">
+
+    <!-- Header -->
+    <header class="page-header">
+      <h1 class="project-title rev">Food Stash Foundation</h1>
+      <div class="meta-row rev">
+        <div class="meta-col">
+          <div class="meta-label">Timeline</div>
+          <div class="meta-value">3 days</div>
+        </div>
+        <div class="meta-col">
+          <div class="meta-label">Role</div>
+          <div class="meta-value">Visual Designer</div>
+        </div>
+        <div class="meta-col">
+          <div class="meta-label">Team Members</div>
+          <div class="meta-value">4</div>
+        </div>
+        <div class="meta-col">
+          <div class="meta-label">Tools</div>
+          <div class="meta-value">Figma</div>
+        </div>
+        <div class="meta-col">
+          <div class="meta-label">Award</div>
+          <div class="meta-value">Top 3</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="hero-card rev-img">
+      <img src="./Group%201597880441.png" alt="Food Stash Foundation redesign on MacBook" />
+    </div>
+
+    <!-- ── OVERVIEW ── -->
+    <section class="cs-section" id="overview">
+      <div class="section-eyebrow rev">The Overview</div>
+      <p class="section-body rev"><strong>Food Stash Foundation</strong> is a Vancouver-based nonprofit dedicated to reducing food waste while providing dignified food access across the community.</p>
+      <p class="section-sub rev">Despite its strong community impact, the organization's website struggled to communicate how users could get involved. During the FLUI Hackathon 2026, we redesigned the experience to transform a visually cluttered and navigation-heavy platform into a clear, engaging system supporting events, volunteering, rentals and donations. I led the visual design and UI system, refining the platform's visual identity, layout, and hierarchy to create a more cohesive and action-oriented experience.</p>
+
+      <div style="padding-top: 64px;">
+        <div class="section-eyebrow rev">The Goal</div>
+        <p class="section-body rev">How might we design a clear and engaging platform that helps users understand Food Stash's impact and take meaningful action?</p>
+      </div>
+
+      <div style="padding-top: 52px;">
+        <div class="img-full rev-img">
+          <video src="./Area.mp4" autoplay loop muted playsinline style="width:100%; border-radius:16px; display:block;"></video>
+        </div>
+        <div class="img-pair">
+          <div class="rev-img" style="background:#FAFAFA; border-radius:16px; display:flex; align-items:center; justify-content:center; padding:48px 40px; min-height:200px;">
+            <img src="./final%20logo.png" alt="New logo" style="max-width:70%; height:auto; display:block;" />
+          </div>
+          <div class="rev-img"><img src="./2.gif" alt="Design walkthrough" style="width:100%; border-radius:16px; display:block;" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── THE PROBLEM ── -->
+    <section class="cs-section" id="gap">
+      <div class="section-eyebrow rev">The Problem</div>
+      <p class="section-body rev">💬 Understanding the gap</p>
+      <p class="section-sub rev">Food Stash offers meaningful programs and initiatives, but the existing website made it difficult for users to understand what Food Stash offers and how to get involved. Through a website audit, stakeholder conversations, and a community partner interview, three experience gaps emerged.</p>
+      <div class="cards-3 rev">
+        <div class="card">
+          <div class="card-label">Navigation Ambiguity</div>
+          <p class="card-text">Users struggled to determine where to go or what action to take.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Visual Overload</div>
+          <p class="card-text">Dense layouts made content difficult to scan and reduced engagement.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Weak Calls to Action</div>
+          <p class="card-text">Key actions lacked visibility and emphasis.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── THE SOLUTION ── -->
+    <section class="cs-section" id="solution">
+      <div class="section-eyebrow rev">The Solution</div>
+      <p class="section-body rev">💡 Our approach focused on three principles</p>
+      <div class="cards-3 rev">
+        <div class="card">
+          <p class="card-text">Simplifying navigation by creating clear, action-based pathways across the platform.</p>
+        </div>
+        <div class="card">
+          <p class="card-text">Clear, thoughtful visuals that reflect on Food Stash's community impact.</p>
+        </div>
+        <div class="card">
+          <p class="card-text">Prioritize action by making key interactions visible, intuitive, and frictionless.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VISUAL SYSTEM ── -->
+    <section class="cs-section" id="visual">
+      <div class="section-eyebrow rev">Visual System</div>
+      <p class="section-body rev">I developed a visual system designed to feel approachable and community-driven.</p>
+      <p class="section-sub rev">Color, type, and layout guide attention and reduce friction, prioritizing readability, scannability, and visual rhythm.</p>
+
+      <div class="vs-panel rev">
+        <div class="vs-title">Color Palette</div>
+        <div class="swatches">
+          <div class="swatch sw-light" style="background:#FFFCF9;"><span>#FFFCF9</span></div>
+          <div class="swatch sw-light" style="background:#F0F0F0;"><span>#F0F0F0</span></div>
+          <div class="swatch sw-light" style="background:#D2D2D2;"><span>#D2D2D2</span></div>
+          <div class="swatch sw-dark"  style="background:#F79839;"><span>#F79839</span></div>
+          <div class="swatch sw-dark"  style="background:#305126;"><span>#305126</span></div>
+        </div>
+
+        <div class="vs-title">Font Families</div>
+        <div class="type-row">
+          <div class="type-item">
+            <div class="type-name">Primary Typeface</div>
+            <div class="type-big">Manrope</div>
+            <div class="type-role">Primary typeface</div>
+            <div class="type-chars">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 !@#$%^&*()</div>
+          </div>
+          <div class="type-item">
+            <div class="type-name">Secondary Typeface</div>
+            <div class="type-big" style="font-weight:300;">Neue Haas Grotesk</div>
+            <div class="type-role">Secondary typeface</div>
+            <div class="type-chars">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 !@#$%^&*()</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── THE PROCESS ── -->
+    <section class="cs-section" id="process">
+      <div class="section-eyebrow rev">The Process</div>
+      <span id="logo" style="display:block; position:relative; top:-80px; visibility:hidden;"></span>
+      <p class="section-body rev">I refined the logo to improve legibility and balance across digital contexts.</p>
+      <p class="section-sub rev">Starting from basic carrot and leaf forms, the design explored how an "S" could be integrated into the shape.</p>
+
+      <!-- Sketch process — full width -->
+      <div class="img-full rev-img">
+        <img src="./Foodstash%20drawing.png" alt="Logo sketch process" />
+      </div>
+
+      <!-- Before / After -->
+      <div class="logo-compare-row rev">
+        <div class="logo-card">
+          <div class="logo-card-label">Before</div>
+          <div class="logo-card-img">
+            <img src="./Old%20logo.png" alt="Original logo" />
+          </div>
+        </div>
+        <div class="logo-card">
+          <div class="logo-card-label">Redesigned</div>
+          <div class="logo-card-img">
+            <img src="./final%20logo.png" alt="Redesigned logo" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Mid-fidelity & high-fidelity -->
+      <p class="section-body rev" style="margin-top: 88px;">Then I translated concepts into mid-fidelity mockups, iterating and refining them into polished high-fidelity designs.</p>
+      <div class="proc-brand rev-img">
+        <img src="./Wireframes.png" alt="Mid to high fidelity wireframes" />
+      </div>
+    </section>
+
+    <!-- ── FINAL DESIGNS ── -->
+    <section class="cs-section" id="designs">
+      <div class="section-eyebrow rev">Final Designs</div>
+      <p class="section-body rev">The redesigned platform, ready for launch.</p>
+      <p class="section-sub rev">In less than 3 days, we recreated the website, added micro-interactions, and created the rental page to make it more visible. Try our prototype to see it in action (Press "R" to restart).</p>
+
+      <!-- Figma Prototype placeholder -->
+      <div class="proto-box rev">
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/proto/Ku7kiG2owscmUTBrdsy331/FLUI-2026--Food-Stash--Team-9-?node-id=430-1365&viewport=4360%2C150%2C0.08&scaling=scale-down&content-scaling=fixed&starting-point-node-id=430%3A1365&page-id=48%3A85&embed-host=share" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- ── VIDEO DEMO ── -->
+    <section class="cs-section" id="video">
+      <div class="section-eyebrow rev">Video Demo</div>
+      <p class="section-body rev">Watch the experience come to life.</p>
+
+      <div class="rev-img" style="border-radius:16px; overflow:hidden; margin-top:32px;">
+        <video src="./foodstash-compressed.mp4" controls playsinline style="width:100%; display:block; border-radius:16px;"></video>
+      </div>
+    </section>
+
+    <!-- ── TAKEAWAYS ── -->
+    <section class="cs-section" id="takeaways">
+      <div class="takeaways-grid">
+        <div class="takeaways-left">
+          <div class="section-eyebrow rev">Key Takeaways</div>
+          <p class="takeaways-heading rev">👩🏻‍💻 What I've learned</p>
+          <p class="takeaways-text rev">Working on such a tight timeline taught me how important it is to manage my time well and focus on what really matters so I can still deliver quality work. It also showed me the value of staying organized early and making confident decisions to keep things moving forward.</p>
+        </div>
+        <div class="takeaways-img rev-img">
+          <img src="./group%20photo.png" alt="Team photo at hackathon" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PREV / NEXT ── -->
+    <div class="proj-nav rev">
+      <a href="pulsepoints.html" class="proj-prev">
+        <div class="proj-dir-label">Previous Work</div>
+        <div class="proj-name-row">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5"/></svg>
+          PulsePoints
+        </div>
+      </a>
+      <a href="vancouver.html" class="proj-next">
+        <div class="proj-dir-label">Next Work</div>
+        <div class="proj-name-row">
+          City of Vancouver
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/></svg>
+        </div>
+      </a>
+    </div>
+
+    <!-- spacer before full-width footer -->
+    <div style="height: 20px;"></div>
+
+  </main>
+</div><!-- /layout -->
+
+<!-- ═══════ FOOTER — full width, outside layout ═══════ -->
+<footer class="site-footer">
+  <p class="footer-left">Designed with 🤍 by Janel Co</p>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/janelco/" target="_blank" rel="noreferrer">Linkedin</a>
+    <a href="mailto:janelstephanie@yahoo.com">Email</a>
+    <a href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" rel="noreferrer">Resume</a>
+  </div>
+</footer>
+
+<script>
+  /* ── Cursor ── */
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.transform = `translate(${e.clientX-10}px,${e.clientY-10}px)`;
+    cursor.classList.add('visible');
+  });
+  document.addEventListener('mouseleave', () => cursor.classList.remove('visible'));
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave',  () => cursor.classList.remove('hovering'));
+  });
+
+  /* ── Scroll Reveal ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+  }, { threshold: 0.07, rootMargin: '0px 0px -24px 0px' });
+  document.querySelectorAll('.rev,.rev-img').forEach((el,i) => {
+    el.style.transitionDelay = `${(i%3)*0.06}s`;
+    io.observe(el);
+  });
+
+  /* ── Footer heart ── */
+  const footerLeft = document.querySelector('.footer-left');
+  if (footerLeft) {
+    footerLeft.innerHTML = footerLeft.innerHTML.replace('🤍', '<span class="f-heart" style="cursor:none;">🤍</span>');
+    const h = footerLeft.querySelector('.f-heart');
+    h.addEventListener('mouseenter', () => h.textContent = '🩷');
+    h.addEventListener('mouseleave', () => h.textContent = '🤍');
+  }
+
+  /* ── Active Sidebar Dot ── */
+  const sections = document.querySelectorAll('section[id]');
+  const navItems = document.querySelectorAll('.sidebar-nav-item');
+  const sectionDotMap = {
+    overview:'overview', gap:'gap', solution:'solution',
+    visual:'visual', logo:'logo', process:'process',
+    designs:'designs', video:'video', takeaways:'takeaways'
+  };
+  const sectionIO = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const dotId = sectionDotMap[entry.target.id] || entry.target.id;
+        navItems.forEach(item => item.classList.toggle('active', item.dataset.section === dotId));
+      }
+    });
+  }, { rootMargin: '-25% 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => sectionIO.observe(s));
+  if (navItems.length) navItems[0].classList.add('active');
+
+  /* ── Hide nav on scroll down, show on scroll up ── */
+  let lastScrollY = 0;
+  const mainNav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > lastScrollY && y > 72) {
+      mainNav.classList.add('nav-hidden');
+    } else {
+      mainNav.classList.remove('nav-hidden');
+    }
+    lastScrollY = y;
+  }, { passive: true });
+</script>
+</body>
+</html>

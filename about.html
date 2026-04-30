@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Janel Co</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon1.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #FFFDFA; color: #1c1c1a; cursor: none; overflow-x: hidden; }
+    a, button { cursor: none; }
+
+    /* ── Cursor ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; border-radius: 50%;
+      pointer-events: none; z-index: 9999; opacity: 0;
+      width: 20px; height: 20px; background: rgba(254,228,228,0.81);
+      transition: opacity 0.2s, width 0.15s, height 0.15s, background 0.15s, transform 0.06s linear;
+    }
+    #cursor.visible { opacity: 1; }
+    #cursor.hovering { width: 26px; height: 26px; background: rgba(230,180,180,0.92); transform: translate(-3px,-3px); }
+
+    /* ── Shade hover label ── */
+    #shade-label {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;
+      background: #FEE4E4; color: #1c1c1a;
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 9px 16px; border-radius: 999px; white-space: nowrap;
+      opacity: 0; transform: scale(0.9);
+      transition: opacity 0.18s cubic-bezier(0.22,1,0.36,1), transform 0.18s cubic-bezier(0.22,1,0.36,1);
+    }
+    #shade-label.visible { opacity: 1; transform: scale(1); }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 72px; background: #FFFDFA;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 80px 16px;
+    }
+    .nav-logo { font-family: 'Hiragino Maru Gothic Pro','Hiragino Maru Gothic ProN','Meiryo',sans-serif; font-size: 28px; font-weight: 400; color: #1c1c1a; text-decoration: none; line-height: 1; }
+    .nav-right { display: flex; gap: 28px; align-items: center; }
+    .nav-link { font-size: 14px; color: #666; text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: #E99DAC !important; }
+    .nav-link.active { color: #C4687A !important; }
+
+    /* ── Page load animations ── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes letterIn {
+      from { opacity: 0; transform: translateY(18px) skewY(2deg); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes floatGallery {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-6px); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes pillPop {
+      from { opacity: 0; transform: scale(0.88) translateY(6px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* ── Product layout ── */
+    .product-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      padding-top: 72px;
+    }
+
+    /* LEFT gallery */
+    .gallery-col {
+      position: sticky; top: 72px; height: calc(100vh - 72px);
+      display: flex; flex-direction: row; gap: 10px; padding: 48px 16px 32px 80px; overflow: hidden;
+    }
+    .thumb-rail { display: flex; flex-direction: column !important; gap: 8px; width: 64px; flex-shrink: 0; }
+    .thumb {
+      width: 64px; height: 64px; border-radius: 10px; overflow: hidden;
+      border: 2px solid transparent; transition: border-color 0.2s, transform 0.25s cubic-bezier(0.22,1,0.36,1);
+      flex-shrink: 0;
+      animation: fadeSlideUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .thumb:nth-child(1) { animation-delay: 0.35s; }
+    .thumb:nth-child(2) { animation-delay: 0.42s; }
+    .thumb:nth-child(3) { animation-delay: 0.49s; }
+    .thumb:nth-child(4) { animation-delay: 0.56s; }
+    .thumb.active { border-color: #1c1c1a; }
+    .thumb:hover { transform: scale(1.06); }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-radius: 6px; }
+    .main-img-wrap {
+      flex: 1; border-radius: 18px; overflow: hidden; background: #F5F0EA;
+      animation: fadeIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.2s both;
+    }
+    .main-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
+      transition: opacity 0.25s;
+    }
+
+    /* RIGHT product info */
+    .product-col {
+      padding: 48px 72px 64px 48px;
+      border-left: none;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* Staggered load for product col children */
+    .product-col > * { animation: fadeSlideUp 0.65s cubic-bezier(0.22,1,0.36,1) both; }
+    .product-col > *:nth-child(1) { animation-delay: 0.15s; }
+    .product-col > *:nth-child(2) { animation-delay: 0.23s; }
+    .product-col > *:nth-child(3) { animation-delay: 0.31s; }
+    .product-col > *:nth-child(4) { animation-delay: 0.39s; }
+    .product-col > *:nth-child(5) { animation-delay: 0.47s; }
+    .product-col > *:nth-child(6) { animation-delay: 0.55s; }
+    .product-col > *:nth-child(7) { animation-delay: 0.60s; }
+    .product-col > *:nth-child(8) { animation-delay: 0.65s; }
+
+    .product-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(38px, 4.2vw, 60px);
+      font-weight: 600; letter-spacing: -0.03em; line-height: 0.95;
+      color: #1c1c1a;
+    }
+    .product-name .letter {
+      display: inline-block;
+      animation: letterIn 0.55s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .product-collab { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; }
+    .product-desc { font-size: 12.5px; font-weight: 300; color: #666; line-height: 1.75; }
+
+    /* ── Shade switcher ── */
+    .shade-switcher-wrap {
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 10px 0 10px;
+    }
+    .field-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #b8b4ac; }
+    .shade-breadcrumb { font-size: 13px; font-weight: 400; color: #1c1c1a; }
+    .shade-breadcrumb .bc-sep { color: #ccc; margin: 0 5px; }
+    .shade-breadcrumb .bc-role { color: #999; }
+    .shade-circles { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .shade-btn {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: none; outline: 2.5px solid transparent; outline-offset: 3px;
+      transition: outline-color 0.2s, transform 0.25s cubic-bezier(0.22,1,0.36,1),
+                  box-shadow 0.2s; flex-shrink: 0;
+    }
+    .shade-btn.active { outline-color: #1c1c1a; }
+    .shade-btn:hover { outline-color: #E99DAC; transform: scale(1.15); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+
+    /* Shade description panel */
+    .shade-desc-panel {
+      background: #F7F4EF; border-radius: 12px; padding: 14px 16px;
+      transition: opacity 0.3s, transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    .shade-desc-panel.switching { opacity: 0; transform: translateY(6px); }
+    .shade-desc-title { font-size: 12px; font-weight: 600; color: #1c1c1a; margin-bottom: 4px; }
+    .shade-desc-text { font-size: 12px; font-weight: 300; color: #888; line-height: 1.65; }
+    .shade-desc-link { display: inline; font-size: 12px; font-weight: 500; color: #E99DAC; text-decoration: none; }
+    .shade-desc-link:hover { color: #C97B8A !important; }
+
+    /* Specialty pills */
+    .field-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #b8b4ac; }
+    .skill-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill {
+      padding: 4px 11px; border-radius: 999px; border: 1.5px solid #e0dbd4;
+      font-size: 11px; color: #666; white-space: nowrap;
+      transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.2s;
+      animation: pillPop 0.4s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .pill:hover { transform: translateY(-1px); }
+    .pill:hover { border-color: #E99DAC; }
+
+    /* Spec list */
+    .product-spec-list { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; border: none; }
+    .product-spec-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; }
+    .product-spec-key { color: #aaa; font-weight: 300; }
+    .product-spec-val { color: #1c1c1a; font-weight: 400; text-align: right; }
+    .product-spec-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(254,228,228,0.5); color: #C97B8A; border-radius: 999px; padding: 2px 10px; font-size: 11.5px; font-weight: 500; }
+
+    /* CTA buttons */
+    .cta-stack { display: flex; flex-direction: column; gap: 10px; padding-top: 10px; }
+    .btn-primary { display: flex; align-items: center; justify-content: center; padding: 13px 24px; background: #1c1c1a; color: #fff; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; transition: background 0.25s, transform 0.2s cubic-bezier(0.22,1,0.36,1); }
+    .btn-primary:hover { background: #E99DAC !important; color: #fff !important; transform: translateY(-1px); }
+    .btn-secondary { display: flex; align-items: center; justify-content: center; padding: 13px 24px; background: transparent; color: #555; border: 1.5px solid #d8d4ce; border-radius: 999px; font-size: 14px; text-decoration: none; transition: all 0.25s; }
+    .btn-secondary:hover { background: rgba(254,228,228,0.4) !important; border-color: #E99DAC !important; color: #1c1c1a !important; transform: translateY(-1px); }
+
+    /* ── Contact CTA ── */
+    .contact-section {
+      padding: 80px 80px 72px;
+      display: flex; justify-content: space-between; align-items: center; gap: 48px;
+    }
+    .contact-left { max-width: 520px; }
+    .contact-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #D4537E; margin-bottom: 16px; }
+    .contact-heading { font-family: 'DM Sans', sans-serif; font-size: clamp(20px, 2.4vw, 36px); font-weight: 500; color: #1c1c1a; line-height: 1.18; margin-bottom: 14px; white-space: nowrap; }
+    .contact-sub { font-size: 15px; font-weight: 300; color: #555; line-height: 1.8; }
+    .contact-actions { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+    .contact-btn { display: inline-flex; align-items: center; justify-content: center; padding: 13px 28px; border: 1.5px solid #1c1c1a; border-radius: 999px; font-size: 14px; color: #1c1c1a; text-decoration: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s; }
+    .contact-btn:hover { background: #1c1c1a; color: #FFFDFA !important; transform: translateY(-1px); }
+    .contact-btn.secondary-btn { border-color: #d8d4ce; color: #555; }
+    .contact-btn.secondary-btn:hover { background: rgba(254,228,228,0.4) !important; border-color: #E99DAC !important; color: #1c1c1a !important; }
+
+    /* Footer */
+    .site-footer { border-top: 1px solid #e8e4dc; padding: 24px 80px; display: flex; align-items: center; justify-content: space-between; background: #FFFDFA; flex-wrap: wrap; gap: 12px; }
+    .footer-left { font-size: 10.5px; color: #aaa; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 400; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: #555; text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: #E99DAC !important; }
+
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1); }
+    .fade-up.show { opacity: 1; transform: none; }
+
+    @media (max-width: 1024px) {
+      .product-wrap { grid-template-columns: 1fr; }
+      .gallery-col { position: relative; top: 0; height: 70vw; max-height: 600px; min-height: 380px; padding: 24px 24px 24px 32px; flex-direction: row !important; }
+      .thumb-rail { flex-direction: column !important; width: 56px; }
+      .thumb { width: 56px; height: 56px; }
+      .product-col { padding: 32px 32px 56px; border-left: none; border-top: 1px solid #ede9e2; }
+      .contact-section { flex-direction: column; align-items: flex-start; padding: 56px 32px 60px; }
+      .site-footer { padding: 20px 32px; }
+      nav { padding: 0 32px 16px; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 20px 16px; }
+      .gallery-col { height: 80vw; max-height: 480px; min-height: 300px; padding: 16px 16px 16px 20px; flex-direction: row !important; }
+      .thumb-rail { flex-direction: column !important; width: 48px; }
+      .thumb { width: 48px; height: 48px; }
+      .product-col { padding: 24px 20px 44px; gap: 10px; }
+      .contact-section { padding: 48px 20px 48px; }
+      .site-footer { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="shade-label"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">許</a>
+  <div class="nav-right">
+    <a href="about.html" class="nav-link active">About</a>
+    <a href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" rel="noreferrer" class="nav-link">Resume</a>
+  </div>
+</nav>
+
+<!-- ═══════ PRODUCT HERO ═══════ -->
+<div class="product-wrap">
+
+  <!-- LEFT: sticky gallery -->
+  <div class="gallery-col">
+    <div class="thumb-rail" id="thumb-rail">
+      <div class="thumb active"><img src="./about/product designer 1.png" alt="" /></div>
+    </div>
+    <div class="main-img-wrap">
+      <img id="main-photo" src="./about/product designer 1.png" alt="Janel Co" />
+    </div>
+  </div>
+
+  <!-- RIGHT: product info -->
+  <div class="product-col">
+
+    <h1 class="product-name" id="product-name">Janel Co</h1>
+
+    <p class="product-collab">Product &amp; Visual Designer</p>
+
+    <p class="product-desc">I'm a designer driven by curiosity and a passion for creative solutions, always looking for thoughtful ways to turn ideas into meaningful experiences. Throughout the years, I've been on a journey of curiosity and creation. From a kid making my school projects creatively, I've developed a passion for visual design and interaction design, an interest that continues to shape how I approach problem-solving today.</p>
+
+    <!-- Shade switcher -->
+    <div class="shade-switcher-wrap">
+      <p class="field-label">Also comes in</p>
+      <div class="shade-breadcrumb" id="shade-breadcrumb">
+        janel co <span class="bc-sep">›</span><span class="bc-role" id="shade-role"> product &amp; visual designer</span>
+      </div>
+      <div class="shade-circles">
+        <!-- Lip-inspired shades light → dark -->
+        <button class="shade-btn active" data-shade="self"   data-label="Product &amp; Visual Designer" style="background:#F0BDBD;"></button>
+        <button class="shade-btn"        data-shade="makeup" data-label="Makeup Artist"                style="background:#D4889A;"></button>
+        <button class="shade-btn"        data-shade="art"    data-label="Digital Artist"               style="background:#A84565;"></button>
+        <button class="shade-btn"        data-shade="foodie" data-label="Foodie"                       style="background:#7A2A3E;"></button>
+      </div>
+      <div class="shade-desc-panel" id="shade-panel">
+        <div class="shade-desc-title" id="shade-panel-title">Product & Visual Designer</div>
+        <div class="shade-desc-text"  id="shade-panel-text">I approach design through both product thinking and visual storytelling by shaping experiences that feel intuitive and expressive.</div>
+      </div>
+    </div>
+
+    <!-- Specialty -->
+    <p class="field-label">Specialty</p>
+    <div class="skill-pills" id="skill-pills-container">
+      <span class="pill active">UI Design</span>
+      <span class="pill">UX Research</span>
+      <span class="pill">Visual Design</span>
+      <span class="pill">Interaction Design</span>
+      <span class="pill">Figma</span>
+      <span class="pill">Adobe Cloud</span>
+    </div>
+
+    <!-- Specs -->
+    <div class="product-spec-list">
+      <div class="product-spec-row"><span class="product-spec-key">Based in</span><span class="product-spec-val">Vancouver, BC</span></div>
+      <div class="product-spec-row"><span class="product-spec-key">School</span><span class="product-spec-val">Simon Fraser University</span></div>
+      <div class="product-spec-row"><span class="product-spec-key">Program</span><span class="product-spec-val">BA Interactive Arts &amp; Technology, Concentrating in Interaction Design</span></div>
+<div class="product-spec-row"><span class="product-spec-key">Status</span><span class="product-spec-val"><span class="product-spec-badge">✦ Open to opportunities</span></span></div>
+    </div>
+
+    <!-- CTAs -->
+    <div class="cta-stack">
+      <a href="mailto:janelstephanie@yahoo.com" class="btn-primary">Add Janel Co to your team →</a>
+      <a href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" rel="noreferrer" class="btn-secondary">Download resume</a>
+    </div>
+  </div>
+
+</div>
+
+
+<footer class="site-footer">
+  <p class="footer-left">Designed with 🤍 by Janel Co</p>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/janelco/" target="_blank" rel="noreferrer">Linkedin</a>
+    <a href="mailto:janelstephanie@yahoo.com">Email</a>
+    <a href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" rel="noreferrer">Resume</a>
+  </div>
+</footer>
+
+<script>
+  /* ── Cursor ── */
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.transform = `translate(${e.clientX-10}px,${e.clientY-10}px)`;
+    cursor.classList.add('visible');
+  });
+  function addHover(el) {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  }
+  document.querySelectorAll('a,button').forEach(addHover);
+
+  /* ── Shade hover label ── */
+  const shadeLabel = document.getElementById('shade-label');
+  let labelX = 0, labelY = 0;
+  document.addEventListener('mousemove', e => {
+    labelX = e.clientX; labelY = e.clientY;
+    shadeLabel.style.left = (labelX + 14) + 'px';
+    shadeLabel.style.top  = (labelY - 14) + 'px';
+  });
+  document.querySelectorAll('.shade-btn').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      shadeLabel.textContent = btn.dataset.label;
+      shadeLabel.classList.add('visible');
+    });
+    btn.addEventListener('mouseleave', () => {
+      shadeLabel.classList.remove('visible');
+    });
+  });
+
+  /* ── Animate heading letters on load ── */
+  (function animateName() {
+    const el = document.getElementById('product-name');
+    const text = el.textContent;
+    el.textContent = '';
+    text.split('').forEach((char, i) => {
+      const s = document.createElement('span');
+      s.className = 'letter';
+      s.textContent = char === ' ' ? '\u00a0' : char;
+      s.style.animationDelay = (100 + i * 55) + 'ms';
+      el.appendChild(s);
+    });
+  })();
+
+  /* ── Shade data ── */
+  const SHADES = {
+    self: {
+      role:       'product & visual designer',
+      panelTitle: 'Product & Visual Designer',
+      panelText:  'I approach design through both product thinking and visual storytelling by shaping experiences that feel intuitive and expressive.',
+      panelLink:  null,
+      specialty:  ['UI Design','UX Research','Visual Design','Interaction Design','Figma','Adobe Cloud'],
+      thumbs: ['./about/product designer 1.png'],
+      main: './about/product designer 1.png'
+    },
+    makeup: {
+      role:       'certified makeup artist',
+      panelTitle: 'Certified Makeup Artist',
+      panelText:  "I'm a certified makeup artist passionate about using creativity to enhance natural beauty and bring unique looks to life. You can view my work on ",
+      panelLink:  { href: 'https://www.instagram.com/janelartistry', label: '@janelartistry →' },
+      specialty:  ['Makeup Artistry','Editorial Looks','Bridal Looks','Soft Glam','Client Relations'],
+      thumbs: ['./about/make up 2.JPG','./about/make up.jpg','./about/make up 3.jpg','./about/make up 4.jpg'],
+      main: './about/make up 2.JPG'
+    },
+    art: {
+      role:       'digital artist',
+      panelTitle: 'Digital Artist',
+      panelText:  'Growing up, I was always encouraged to get creative. Whether through traditional art or digital tools, I loved thinking outside the box.',
+      panelLink:  null,
+      specialty:  ['Digital Illustration','Procreate','Photoshop','Typography','Motion Design'],
+      thumbs: ['./about/art 1.PNG','./about/art 2.PNG','./about/art 3.png','./about/art 4.png','./about/art 5.PNG'],
+      main: './about/art 1.PNG'
+    },
+    foodie: {
+      role:       'foodie',
+      panelTitle: 'Foodie Adventures',
+      panelText:  "There's something exciting about tasting new flavours and experiencing different cultures through food. Every meal is a new adventure for me!",
+      panelLink:  null,
+      specialty:  ['Restaurant Hunting','Culture Exploration','Attention to Flavor & Detail'],
+      thumbs: ['./about/food 1.jpg','./about/food 2.png','./about/food 3.JPG'],
+      main: './about/food 1.jpg'
+    }
+  };
+
+  const mainPhoto  = document.getElementById('main-photo');
+  const thumbRail  = document.getElementById('thumb-rail');
+  const shadeRole  = document.getElementById('shade-role');
+  const panel      = document.getElementById('shade-panel');
+  const panelTitle = document.getElementById('shade-panel-title');
+  const panelText  = document.getElementById('shade-panel-text');
+  const pillsWrap  = document.getElementById('skill-pills-container');
+
+  function updatePills(specialty) {
+    pillsWrap.innerHTML = specialty.map((s, i) =>
+      `<span class="pill" style="animation-delay:${i * 50}ms">${s}</span>`
+    ).join('');
+    pillsWrap.querySelectorAll('.pill').forEach((p, i) => {
+      if (i === 0) p.classList.add('active');
+      p.addEventListener('click', () => {
+        pillsWrap.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+        p.classList.add('active');
+      });
+      addHover(p);
+    });
+  }
+
+  function switchShade(key) {
+    const s = SHADES[key];
+
+    /* Swatch active state */
+    document.querySelectorAll('.shade-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.shade === key)
+    );
+
+    /* Breadcrumb role */
+    shadeRole.textContent = ' ' + s.role;
+
+    /* Panel fade out → update → fade in */
+    panel.classList.add('switching');
+    setTimeout(() => {
+      panelTitle.textContent = s.panelTitle;
+      panelText.textContent  = s.panelText;
+      const old = panel.querySelector('.shade-desc-link');
+      if (old) old.remove();
+      if (s.panelLink) {
+        const a = document.createElement('a');
+        a.className = 'shade-desc-link';
+        a.href = s.panelLink.href; a.target = '_blank'; a.rel = 'noreferrer';
+        a.textContent = s.panelLink.label;
+        panelText.appendChild(a);
+        addHover(a);
+      }
+      panel.classList.remove('switching');
+    }, 220);
+
+    /* Thumbnails — rebuild rail to match exact count */
+    thumbRail.innerHTML = s.thumbs.map((src, i) =>
+      `<div class="thumb${i === 0 ? ' active' : ''}"><img src="${src}" alt="" /></div>`
+    ).join('');
+
+    /* Main image crossfade */
+    mainPhoto.style.opacity = '0';
+    setTimeout(() => {
+      mainPhoto.src = s.main;
+      mainPhoto.style.transform = s.zoom ? `scale(${s.zoom})` : 'scale(1)';
+      mainPhoto.style.opacity = '1';
+    }, 200);
+
+    /* Pills with stagger */
+    updatePills(s.specialty);
+  }
+
+  /* Shade button clicks */
+  document.querySelectorAll('.shade-btn').forEach(btn =>
+    btn.addEventListener('click', () => switchShade(btn.dataset.shade))
+  );
+
+  /* Thumbnail clicks */
+  thumbRail.addEventListener('click', e => {
+    const th = e.target.closest('.thumb');
+    if (!th) return;
+    thumbRail.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    th.classList.add('active');
+    mainPhoto.style.opacity = '0';
+    setTimeout(() => { mainPhoto.src = th.querySelector('img').src; mainPhoto.style.opacity = '1'; }, 200);
+  });
+
+  /* Footer heart */
+  const footerLeft = document.querySelector('.footer-left');
+  if (footerLeft) {
+    footerLeft.innerHTML = footerLeft.innerHTML.replace('🤍', '<span class="f-heart" style="cursor:none;">🤍</span>');
+    const h = footerLeft.querySelector('.f-heart');
+    h.addEventListener('mouseenter', () => h.textContent = '🩷');
+    h.addEventListener('mouseleave', () => h.textContent = '🤍');
+  }
+
+  /* Scroll reveal */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
