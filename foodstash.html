@@ -328,6 +328,9 @@
       .main { padding: 0 20px 0; }
       nav { padding: 0 20px 16px; }
       .site-footer { padding: 20px; }
+      .swatches { gap: 4px; }
+      .swatch { height: 80px; }
+      .swatch span { font-size: 7px; top: 6px; left: 6px; letter-spacing: 0; }
     }
   </style>
 </head>
@@ -549,7 +552,10 @@
       <p class="section-body rev">Watch the experience come to life.</p>
 
       <div class="rev-img" style="border-radius:16px; overflow:hidden; margin-top:32px;">
-        <video src="./foodstash-compressed.mp4" controls playsinline style="width:100%; display:block; border-radius:16px;"></video>
+        <div style="width:100%; aspect-ratio:16/9; border-radius:16px; background:#f5f3f0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#d4cfc8" stroke-width="1.5"/><path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="#d4cfc8"/></svg>
+          <span style="font-size:13px; color:#bbb8b2; font-family:'DM Sans',sans-serif;">Video coming soon</span>
+        </div>
       </div>
     </section>
 
