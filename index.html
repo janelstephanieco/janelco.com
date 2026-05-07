@@ -331,6 +331,17 @@
       <section class="projects-section">
         <div class="card-grid" id="work-grid">
 
+          <a class="card" href="chanels.html" data-label="VIEW PROJECT">
+            <div class="card-img" style="overflow:hidden;">
+              <img src="./chanel's/hero.png" alt="Chanel's Library and Café" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center center;" />
+            </div>
+            <div class="card-info">
+              <p class="card-cat">Chanel's Library and Café</p>
+              <p class="card-title">Designing a cozy café for coffee and good books</p>
+              <p class="card-role">Role · Branding, Visual Design</p>
+            </div>
+          </a>
+
           <a class="card" href="pulsepoints.html">
             <div class="card-img" style="padding: 32px; display:flex; align-items:center; justify-content:center;"><img src="./fraserhealth.png" alt="Fraserhealth" loading="lazy" style="width:100%;height:100%;object-fit:contain;object-position:center center;" /></div>
             <div class="card-info">
@@ -356,18 +367,6 @@
             <div class="card-info">
               <p class="card-cat">City of Vancouver</p>
               <p class="card-title">Improving access to cooling resources during extreme heat events</p>
-              <p class="card-role">Role · UX Research, Visual, Interaction</p>
-            </div>
-          </a>
-
-          <a class="card coming-soon" href="#">
-            <div class="card-img" style="padding: 32px; display:flex; align-items:center; justify-content:center;">
-              <img src="./Group 1597880478.png" alt="TransLink" loading="lazy" style="width:100%;height:100%;object-fit:contain;object-position:center center;" />
-              <div class="card-overlay"><span class="overlay-text">Coming Soon</span></div>
-            </div>
-            <div class="card-info">
-              <p class="card-cat">TransLink</p>
-              <p class="card-title">Improving accessibility in voice-first transit trip planning</p>
               <p class="card-role">Role · UX Research, Visual, Interaction</p>
             </div>
           </a>
@@ -473,7 +472,7 @@
       const workCard = e.target.closest('#work-grid .card:not(.coming-soon)');
       const creativeCard = e.target.closest('#creative-grid .card');
       if (workCard) {
-        hoverLabel.innerHTML = 'VIEW CASE STUDY';
+        hoverLabel.innerHTML = workCard.dataset.label || 'VIEW CASE STUDY';
         hoverLabel.classList.add('visible');
       } else if (creativeCard) {
         hoverLabel.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px;">OPEN PROJECT<svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" stroke="#1c1c1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="15 3 21 3 21 9" stroke="#1c1c1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="14" x2="21" y2="3" stroke="#1c1c1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
