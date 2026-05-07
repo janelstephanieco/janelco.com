@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Janel Co</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon1.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; cursor: none !important; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #FFFDFA; color: #1c1c1a; min-height: 100vh; }
+    a, button { cursor: none; }
+    img { display: block; width: 100%; }
+
+    /* ── Cursor ── */
+    #cursor {
+      position: fixed; top: 0; left: 0;
+      border-radius: 50%; pointer-events: none; z-index: 9999; opacity: 0;
+      transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease, transform 0.08s linear;
+    }
+    #cursor.visible { opacity: 1; }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      height: 72px; background: #FFFDFA;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 80px 16px;
+    }
+    .nav-logo {
+      font-family: 'Hiragino Maru Gothic Pro', 'Hiragino Maru Gothic ProN', 'Meiryo', sans-serif;
+      font-size: 28px; font-weight: 400; color: #1c1c1a;
+      text-decoration: none; line-height: 1;
+    }
+    .nav-right { display: flex; gap: 28px; align-items: center; }
+    .nav-link { font-size: 14px; font-weight: 400; color: #666; text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: #E99DAC !important; }
+    .nav-link.active { color: #1c1c1a; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── Grid ── */
+    .grid-wrap { padding-top: 72px; }
+
+    .pg-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+    }
+
+    /* ── Card ── */
+    .pg-card {
+      display: block;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+    }
+    .pg-card img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      display: block;
+      transition: transform 0.55s cubic-bezier(0.22,1,0.36,1);
+    }
+    .pg-card:hover img { transform: scale(1.04); }
+
+    /* ── Hover overlay ── */
+    .pg-card-info {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 28px;
+      background: linear-gradient(to top, rgba(28,28,26,0.55) 0%, transparent 55%);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    .pg-card:hover .pg-card-info { opacity: 1; transform: translateY(0); }
+    .pg-card-cat {
+      font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px;
+    }
+    .pg-card-title {
+      font-size: 16px; font-weight: 400; color: #fff;
+      line-height: 1.35; letter-spacing: -0.01em;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid #e8e4dc;
+      padding: 24px 80px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #FFFDFA; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-left { font-size: 10.5px; color: #aaa; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 400; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: #555; text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: #E99DAC !important; }
+
+    @media (max-width: 860px) {
+      nav { padding: 0 32px 14px; }
+      .pg-grid { grid-template-columns: 1fr; }
+      footer { padding: 20px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">許</a>
+  <div class="nav-right">
+    <a class="nav-link" href="about.html">About</a>
+    <a class="nav-link active" href="playground.html">Playground</a>
+    <a class="nav-link" href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" rel="noreferrer">Resume</a>
+  </div>
+</nav>
+
+<div class="grid-wrap">
+  <div class="pg-grid">
+
+    <a class="pg-card" href="https://www.youtube.com/watch?v=ddLLOiwsk9s" target="_blank" rel="noreferrer">
+      <img src="https://framerusercontent.com/images/THCjcWtqGfIheU65QhGOAapP5a4.jpg?width=900" alt="Sky Garden" loading="lazy" />
+      <div class="pg-card-info">
+        <p class="pg-card-cat">Animation</p>
+        <p class="pg-card-title">The Secret of the Sky Garden</p>
+      </div>
+    </a>
+
+    <a class="pg-card" href="https://www.youtube.com/watch?v=Kg5TTZ5YaNk" target="_blank" rel="noreferrer">
+      <img src="https://framerusercontent.com/images/excYXZzjXafkpblig6uslWbDGlw.png?width=900" alt="Shower Typography" loading="lazy" />
+      <div class="pg-card-info">
+        <p class="pg-card-cat">Motion Typography</p>
+        <p class="pg-card-title">Shower by Becky G</p>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    <p class="footer-left">Designed with <span id="footer-heart">🤍</span> by Janel Co</p>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/janelco/" target="_blank" rel="noreferrer">Linkedin</a>
+      <a href="mailto:janelstephanie@yahoo.com">Email</a>
+      <a href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" rel="noreferrer">Resume</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const cur = document.getElementById('cursor');
+  let hovering = false;
+  function setCursor() {
+    cur.style.width  = (hovering ? 26 : 20) + 'px';
+    cur.style.height = (hovering ? 26 : 20) + 'px';
+    cur.style.background = hovering ? 'rgba(230,180,180,0.92)' : 'rgba(254,228,228,0.81)';
+  }
+  setCursor();
+  document.addEventListener('mousemove', e => {
+    const s = hovering ? 13 : 10;
+    cur.style.transform = `translate(${e.clientX - s}px, ${e.clientY - s}px)`;
+    cur.classList.add('visible');
+  });
+  document.addEventListener('mouseleave', () => cur.classList.remove('visible'));
+  document.addEventListener('mouseover', e => {
+    hovering = !!e.target.closest('a, button');
+    setCursor();
+  });
+  const h = document.getElementById('footer-heart');
+  if (h) {
+    h.addEventListener('mouseenter', () => h.textContent = '🩷');
+    h.addEventListener('mouseleave', () => h.textContent = '🤍');
+  }
+</script>
+</body>
+</html>
