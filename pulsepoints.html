@@ -326,20 +326,34 @@
     }
 
     /* ── Rose Thorn Bud ── */
-    .rtb-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 36px; }
-    .rtb-card { border-radius: 18px; padding: 30px 26px; }
-    .rtb-rose { background: #FFF5F5; }
-    .rtb-bud  { background: #F5FFF7; }
-    .rtb-thorn{ background: #FAFAFA; }
+    .rtb-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 36px; align-items: start; }
+    .rtb-card {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      border-radius: 18px;
+      padding: 30px 26px;
+    }
+    .rtb-rose  { background: #FFF5F5; }
+    .rtb-thorn { background: #FAFAFA; }
+    .rtb-bud   { background: #F5FFF7; }
     .rtb-label {
+      font-family: 'DM Sans', system-ui, sans-serif;
       font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
       text-transform: uppercase; margin-bottom: 14px;
     }
     .rtb-rose .rtb-label  { color: #C87070; }
     .rtb-bud  .rtb-label  { color: #5A9C6A; }
     .rtb-thorn .rtb-label { color: #888; }
-    .rtb-item { font-size: 14px; font-weight: 300; color: #6a6a68; line-height: 1.65; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .rtb-item {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 14px; font-weight: 300; color: #6a6a68; line-height: 1.65;
+      padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
     .rtb-item:last-child { border-bottom: none; }
+    .rtb-takeaway {
+      margin-top: 32px;
+      font-size: 16px; font-weight: 300; color: #6a6a68;
+      line-height: 1.75;
+    }
 
     /* ── Images ── */
     .img-full { margin-top: 36px; border-radius: 20px; overflow: hidden; }
@@ -477,6 +491,7 @@
       <a href="#overview"  class="sidebar-nav-item" data-section="overview"><span class="dot-label">Overview</span></a>
       <a href="#research"  class="sidebar-nav-item" data-section="research"><span class="dot-label">The Research</span></a>
       <a href="#journey"   class="sidebar-nav-item" data-section="journey"><span class="dot-label">PQI Trainings</span></a>
+      <a href="#persona"   class="sidebar-nav-item" data-section="persona"><span class="dot-label">Rose, Thorn, Bud</span></a>
       <a href="#persona"   class="sidebar-nav-item" data-section="persona"><span class="dot-label">User Persona</span></a>
       <a href="#solution"  class="sidebar-nav-item" data-section="solution"><span class="dot-label">The Solution</span></a>
       <a href="#final"     class="sidebar-nav-item" data-section="final"><span class="dot-label">Final Designs</span></a>
@@ -645,9 +660,34 @@
       </div>
     </section>
 
-    <!-- ── USER PERSONA ── -->
+    <!-- ── ROSE THORN BUD + PERSONA ── -->
     <section class="cs-section" id="persona">
-      <div class="section-eyebrow rev">User Persona</div>
+      <div class="section-eyebrow rev">Rose, Thorn, Bud</div>
+      <p class="section-body rev">We gathered early feedback on the stamp card concept using a Rose, Thorn, Bud framework with the PQI team</p>
+      <div class="rtb-grid rev">
+        <div class="rtb-card rtb-rose">
+          <div class="rtb-label">🌹 Rose</div>
+          <div class="rtb-item">"Great way to engage staff, faculty and participants"</div>
+          <div class="rtb-item">"Fosters community and bridges gaps between primary and secondary care providers."</div>
+          <div class="rtb-item">"Motivates everyone to create a quality impact"</div>
+        </div>
+        <div class="rtb-card rtb-thorn">
+          <div class="rtb-label">🌵 Thorn</div>
+          <div class="rtb-item">"Too many stamps for a reward can be discouraging like collecting 10 for just a free drink."</div>
+          <div class="rtb-item">"Faculty is already busy teaching, staff should be the ones stamping the cards for everyone."</div>
+          <div class="rtb-item">"Some may be motivated, some might not care about stamps."</div>
+          <div class="rtb-item">"What if they achieve all stamps in a very short period of time?"</div>
+        </div>
+        <div class="rtb-card rtb-bud">
+          <div class="rtb-label">🌱 Bud</div>
+          <div class="rtb-item">"Will stamps vary between groups, like non-physicians vs. physicians?"</div>
+          <div class="rtb-item">"It would be fun to create a leaderboard to recognize top stamp earners"</div>
+          <div class="rtb-item">"Can stamps be color-coded by group, like green for nurses, and another for physicians?"</div>
+        </div>
+      </div>
+      <p class="rtb-takeaway rev">From this evaluation, it became clear that a successful solution must ensure incentives are clear and motivating, simplicity reduces training fatigue, and the design supports diverse user needs.</p>
+
+      <div class="section-eyebrow rev" style="margin-top: 64px;">User Persona</div>
       <p class="section-body rev">From there, we created a persona to guide our design decisions</p>
       <p class="section-sub rev" style="margin-top: 16px;">Our research pointed to a consistent profile which is an early-career physician who sees value in PQI but struggles to stay engaged without a clear reason to. We used this to ground every design decision that followed.</p>
 
