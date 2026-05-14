@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Janel Co</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon1.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #FFFDFA; color: #1c1c1a; cursor: none; }
+    a, button { cursor: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Cursor ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; border-radius: 50%;
+      pointer-events: none; z-index: 9999; opacity: 0;
+      width: 20px; height: 20px; background: rgba(254,228,228,0.81);
+      transition: opacity 0.2s, width 0.15s, height 0.15s, background 0.15s, transform 0.06s linear;
+    }
+    #cursor.visible { opacity: 1; }
+    #cursor.hovering { width: 26px; height: 26px; background: rgba(230,180,180,0.92); transform: translate(-3px,-3px); }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 72px; background: #FFFDFA;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 80px 16px;
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    nav.nav-hidden { transform: translateY(-100%); }
+    .nav-logo {
+      font-family: 'Hiragino Maru Gothic Pro','Hiragino Maru Gothic ProN','Meiryo',sans-serif;
+      font-size: 28px; font-weight: 400; color: #1c1c1a; text-decoration: none; line-height: 1;
+    }
+    .nav-right { display: flex; gap: 28px; align-items: center; }
+    .nav-link { font-size: 14px; font-weight: 400; color: #666; text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: #E99DAC !important; }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex; align-items: flex-start;
+      padding-top: 72px; padding-left: 80px; padding-right: 80px;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: sticky; top: 72px; align-self: flex-start; flex-shrink: 0; width: 220px;
+      padding: 44px 24px 32px 0;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+      background: #FFFDFA; z-index: 50;
+    }
+    .sidebar-back {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 400; color: #aaa;
+      text-decoration: none; letter-spacing: 0.03em;
+      transition: color 0.2s; margin: 0 0 24px 0;
+    }
+    .sidebar-back:hover { color: #1c1c1a !important; }
+    .sidebar-back:hover svg { transform: translateX(-3px); }
+    .sidebar-back svg { transition: transform 0.2s; }
+    .sidebar-eyebrow {
+      font-size: 10px; font-weight: 500; color: #c0bbb2;
+      letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 5px 0;
+    }
+    .sidebar-project {
+      font-size: 14px; font-weight: 500; color: #1c1c1a;
+      line-height: 1.35; margin: 0;
+    }
+
+    /* ── Main content ── */
+    .main { flex: 1; min-width: 0; padding: 0 0 0 52px; }
+
+    /* ── Page header ── */
+    .page-header { padding-top: 44px; padding-bottom: 52px; }
+    .project-title {
+      font-size: clamp(32px, 3.8vw, 48px); font-weight: 500;
+      letter-spacing: -0.03em; color: #1c1c1a;
+      line-height: 1.0; margin-bottom: 40px;
+    }
+    .meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+    .meta-col { padding: 0 24px; }
+    .meta-col:first-child { padding-left: 0; }
+    .meta-label {
+      font-size: 10px; font-weight: 500; color: #b8b4ac;
+      letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .meta-value { font-size: 15px; font-weight: 300; color: #1c1c1a; }
+
+    /* ── Hero ── */
+    .hero-card { border-radius: 24px; overflow: hidden; }
+    .hero-card img { width: 100%; display: block; }
+
+    /* ── Sections ── */
+    .cs-section { padding-top: 88px; }
+    .section-eyebrow {
+      font-size: 10px; font-weight: 500; color: #b8b4ac;
+      letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 22px;
+    }
+    .section-body {
+      font-size: clamp(22px, 2.4vw, 28px); font-weight: 400;
+      color: #1c1c1a; line-height: 1.45; letter-spacing: -0.015em;
+    }
+    .section-sub {
+      font-size: 17px; font-weight: 300; color: #7e7e7e;
+      line-height: 1.8; margin-top: 18px;
+    }
+
+    /* ── Image layouts ── */
+    .img-full { margin-top: 36px; border-radius: 20px; overflow: hidden; }
+    .img-full img { width: 100%; display: block; }
+
+    .img-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .img-pair > div { border-radius: 20px; overflow: hidden; }
+    .img-pair img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ── Prev / Next ── */
+    .proj-nav {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 64px 0 0;
+    }
+    .proj-prev, .proj-next {
+      text-decoration: none; color: #1c1c1a;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .proj-prev:hover, .proj-next:hover { color: #E99DAC !important; }
+    .proj-next { align-items: flex-end; }
+    .proj-dir-label {
+      font-size: 10px; font-weight: 500; color: #b8b4ac;
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .proj-name-row {
+      font-size: 17px; font-weight: 400; letter-spacing: -0.01em;
+      color: #1c1c1a; display: flex; align-items: center; gap: 7px;
+      transition: color 0.2s;
+    }
+    .proj-prev:hover .proj-name-row,
+    .proj-next:hover .proj-name-row { color: #E99DAC; }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid #e8e4dc; padding: 24px 80px; margin-top: 80px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #FFFDFA; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-left { font-size: 10.5px; color: #aaa; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 400; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: #555; text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: #E99DAC !important; }
+
+    /* ── Animations ── */
+    .rev { opacity: 0; transform: translateY(22px); transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1); }
+    .rev.show { opacity: 1; transform: none; }
+    .rev-img { opacity: 0; transform: scale(0.98); transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+    .rev-img.show { opacity: 1; transform: scale(1); }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .layout { padding-left: 32px; padding-right: 32px; }
+      .sidebar { display: none; }
+      .main { padding: 0; }
+      nav { padding: 0 32px 16px; }
+      .project-title { white-space: normal; }
+      .meta-row { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .meta-col { padding: 0; }
+      .img-pair { grid-template-columns: 1fr; }
+      .site-footer { padding: 24px 32px; }
+    }
+    @media (max-width: 600px) {
+      .main { padding: 0 20px 0; }
+      nav { padding: 0 20px 16px; }
+      .site-footer { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html" class="nav-logo">許</a>
+  <div class="nav-right">
+    <a href="about.html" class="nav-link">About</a>
+    <a href="https://www.cosmos.so/janelco" target="_blank" rel="noreferrer" class="nav-link">Playground</a>
+    <a href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" class="nav-link">Resume</a>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-back">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2L4 6.5l4 4.5"/></svg>
+      Back to Projects
+    </a>
+    <div class="sidebar-eyebrow">Project</div>
+    <div class="sidebar-project">Blaire</div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Header -->
+    <header class="page-header">
+      <h1 class="project-title rev">Blaire</h1>
+      <div class="meta-row rev">
+        <div class="meta-col">
+          <div class="meta-label">Timeline</div>
+          <div class="meta-value">2 days</div>
+        </div>
+        <div class="meta-col">
+          <div class="meta-label">Role</div>
+          <div class="meta-value">Brand Designer</div>
+        </div>
+        <div class="meta-col">
+          <div class="meta-label">Deliverables</div>
+          <div class="meta-value">Brand Identity, Packaging, Visual Design</div>
+        </div>
+        <div class="meta-col">
+          <div class="meta-label">Tools</div>
+          <div class="meta-value">Figma, Illustrator, Photoshop</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="hero-card rev-img">
+      <img src="./blaire/hero image.png" alt="Blaire skincare" />
+    </div>
+
+    <!-- Overview -->
+    <section class="cs-section" id="overview">
+      <div class="section-eyebrow rev">Overview</div>
+      <p class="section-body rev">Blaire is a modern skincare and beauty brand. The products are made to enhance rather than cover, creating a clean approach to beauty.</p>
+      <p class="section-sub rev">A design brief created for <a href="https://www.instagram.com/designerbriefs" target="_blank" rel="noreferrer" style="color: #E99DAC; text-decoration: none;">@designerbriefs</a> on Instagram. Blaire is a skincare and packaging concept built around a simple idea: radiance isn't a finish, it's a feeling. Rooted in minimalism, every detail is intentional that allows the product, and the experience, to speak for itself.</p>
+    </section>
+
+    <!-- Images -->
+    <div class="img-pair rev-img" style="margin-top: 36px;">
+      <div><img src="./blaire/moisturizer 1.png" alt="Blaire moisturizer" /></div>
+      <div><img src="./blaire/moisturiZer 2.png" alt="Blaire moisturizer" /></div>
+    </div>
+
+    <div class="img-full rev-img">
+      <img src="./blaire/Product_Image_Adjustment_In_a_minimalist_product_photography_style_a_daY0DUEG.png" alt="Blaire product flat lay" />
+    </div>
+
+    <div class="img-pair rev-img">
+      <div><img src="./blaire/Product_Image_Adjustment_A_frosted_glass_bottle_of_Glaze_Serum_is_cJS9sP_l.png" alt="Glaze serum" /></div>
+      <div><img src="./blaire/Product_Image_Adjustment_A_clear_dropper_hovers_above_an_open_frosted_KSpByov7.png" alt="Blaire dropper serum" /></div>
+    </div>
+
+    <div class="img-full rev-img">
+      <img src="./blaire/Product_Image_Adjustment_In_a_clean_product-focused_studio_style_a_woman_vhJS3KOf.png" alt="Blaire lifestyle" />
+    </div>
+
+    <div class="img-full rev-img">
+      <img src="./blaire/Product_Image_Adjustment_In_a_minimalist_style_a_vanilla_mochi_lip_balm_ISFP3vWh.png" alt="Blaire lip balm" />
+    </div>
+
+    <div class="img-full rev-img">
+      <img src="./blaire/Slide 4_3 - 9.png" alt="Blaire brand board" />
+    </div>
+
+    <!-- Prev / Next -->
+    <div class="proj-nav rev">
+      <div></div>
+      <a href="chanels.html" class="proj-next">
+        <div class="proj-dir-label">Next Work</div>
+        <div class="proj-name-row">
+          Chanel's Library and Café
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/></svg>
+        </div>
+      </a>
+    </div>
+
+    <div style="height: 20px;"></div>
+
+  </main>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <p class="footer-left">Designed with 🤍 by Janel Co</p>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/janelco/" target="_blank" rel="noreferrer">Linkedin</a>
+    <a href="mailto:janelstephanie@yahoo.com">Email</a>
+    <a href="https://drive.google.com/file/d/1jR0-UFpSR3s455D-ho1Jdca-T7b124f-/view?usp=sharing" target="_blank" rel="noreferrer">Resume</a>
+  </div>
+</footer>
+
+<script>
+  /* ── Cursor ── */
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.transform = `translate(${e.clientX-10}px,${e.clientY-10}px)`;
+    cursor.classList.add('visible');
+  });
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  /* ── Scroll reveal ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+  }, { threshold: 0.07, rootMargin: '0px 0px -24px 0px' });
+  document.querySelectorAll('.rev,.rev-img').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 3) * 0.06}s`;
+    io.observe(el);
+  });
+
+  /* ── Footer heart ── */
+  const footerLeft = document.querySelector('.footer-left');
+  if (footerLeft) {
+    footerLeft.innerHTML = footerLeft.innerHTML.replace('🤍', '<span class="f-heart" style="cursor:none;transition:none;">🤍</span>');
+    const h = footerLeft.querySelector('.f-heart');
+    h.addEventListener('mouseenter', () => h.textContent = '🩷');
+    h.addEventListener('mouseleave', () => h.textContent = '🤍');
+  }
+
+  /* ── Hide nav on scroll down ── */
+  let lastScrollY = 0;
+  const mainNav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    mainNav.classList.toggle('nav-hidden', y > lastScrollY && y > 72);
+    lastScrollY = y;
+  }, { passive: true });
+</script>
+</body>
+</html>

@@ -262,6 +262,17 @@
     .proj-prev:hover .proj-name-row,
     .proj-next:hover .proj-name-row { color: #E99DAC; }
 
+    /* Coming soon next link */
+    .proj-next-soon { cursor: default; }
+    .proj-next-soon .coming-soon-label {
+      font-size: 10px; font-weight: 500; color: #b8b4ac;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      opacity: 0; transition: opacity 0.2s ease;
+      display: block; text-align: right; margin-bottom: 2px;
+    }
+    .proj-next-soon:hover .coming-soon-label { opacity: 1; }
+    .proj-next-soon:hover .proj-name-row { color: #b8b4ac; }
+
     /* ══════════════════════════
        FOOTER
     ══════════════════════════ */
