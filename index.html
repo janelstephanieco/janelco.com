@@ -26,7 +26,7 @@
       position: fixed; top: 0; left: 0;
       border-radius: 50%; pointer-events: none; z-index: 9999;
       opacity: 0;
-      transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease, transform 0.08s linear;
+      transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease, transform 0s linear;
     }
     #cursor.visible { opacity: 1; }
 
@@ -213,7 +213,7 @@
     .card-info { display: flex; flex-direction: column; gap: 3px; flex: 1; }
     .card-cat { font-size: 12.5px; color: #999; margin: 0; }
     .card-title { font-size: 15px; color: #1c1c1a; margin: 0; font-weight: 400; line-height: 1.43; }
-    .card-role { font-size: 11.5px; color: #bbb; margin: 0; margin-top: 1px; }
+    .card-role { font-size: 13px; color: #999; margin: 0; margin-top: 2px; }
     .card-view-row { display: flex; justify-content: flex-end; margin-top: 14px; }
     .card-view {
       font-size: 12px; color: #999;
@@ -332,17 +332,6 @@
       <section class="projects-section">
         <div class="card-grid" id="work-grid">
 
-          <a class="card" href="blaire.html" data-label="VIEW PROJECT">
-            <div class="card-img" style="overflow:hidden;">
-              <img src="./blaire/hero image.png" alt="Blaire" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center center;" />
-            </div>
-            <div class="card-info">
-              <p class="card-cat">Blaire</p>
-              <p class="card-title">Designing for a modern, clean skincare brand</p>
-              <p class="card-role">Role · Branding, Packaging, Visual Design</p>
-            </div>
-          </a>
-
           <a class="card" href="chanels.html" data-label="VIEW PROJECT">
             <div class="card-img" style="overflow:hidden;">
               <img src="./Chanel's/hero.png" alt="Chanel's Library and Café" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center center;" />
@@ -360,6 +349,17 @@
               <p class="card-cat">Fraserhealth</p>
               <p class="card-title">Increasing long-term engagement for Physicians</p>
               <p class="card-role">Role · UX Research, Visual, Interaction</p>
+            </div>
+          </a>
+
+          <a class="card" href="blaire.html" data-label="VIEW PROJECT">
+            <div class="card-img" style="overflow:hidden;">
+              <img src="./blaire/hero image.png" alt="Blaire" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center center;" />
+            </div>
+            <div class="card-info">
+              <p class="card-cat">Blaire</p>
+              <p class="card-title">Designing for a modern, clean skincare brand</p>
+              <p class="card-role">Role · Branding, Packaging, Visual Design</p>
             </div>
           </a>
 

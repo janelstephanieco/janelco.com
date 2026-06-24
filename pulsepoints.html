@@ -20,7 +20,7 @@
       position: fixed; top: 0; left: 0; border-radius: 50%;
       pointer-events: none; z-index: 9999; opacity: 0;
       width: 20px; height: 20px; background: rgba(254,228,228,0.81);
-      transition: opacity 0.2s, width 0.15s, height 0.15s, background 0.15s, transform 0.06s linear;
+      transition: opacity 0.2s, width 0.15s, height 0.15s, background 0.15s, transform 0s linear;
     }
     #cursor.visible { opacity: 1; }
     #cursor.hovering { width: 26px; height: 26px; background: rgba(230,180,180,0.92); transform: translate(-3px,-3px); }
@@ -491,10 +491,10 @@
       <a href="#overview"  class="sidebar-nav-item" data-section="overview"><span class="dot-label">Overview</span></a>
       <a href="#research"  class="sidebar-nav-item" data-section="research"><span class="dot-label">The Research</span></a>
       <a href="#journey"   class="sidebar-nav-item" data-section="journey"><span class="dot-label">PQI Trainings</span></a>
-      <a href="#persona"   class="sidebar-nav-item" data-section="persona"><span class="dot-label">Rose, Thorn, Bud</span></a>
+      <a href="#rtb"       class="sidebar-nav-item" data-section="rtb"><span class="dot-label">Rose, Thorn, Bud</span></a>
       <a href="#persona"   class="sidebar-nav-item" data-section="persona"><span class="dot-label">User Persona</span></a>
       <a href="#solution"  class="sidebar-nav-item" data-section="solution"><span class="dot-label">The Solution</span></a>
-      <a href="#final"     class="sidebar-nav-item" data-section="final"><span class="dot-label">Final Designs</span></a>
+      <a href="#final"     class="sidebar-nav-item" data-section="final"><span class="dot-label">Prototype</span></a>
       <a href="#takeaways" class="sidebar-nav-item" data-section="takeaways"><span class="dot-label">Key Takeaways</span></a>
     </div>
   </aside>
@@ -661,7 +661,7 @@
     </section>
 
     <!-- ── ROSE THORN BUD + PERSONA ── -->
-    <section class="cs-section" id="persona">
+    <section class="cs-section" id="rtb">
       <div class="section-eyebrow rev">Rose, Thorn, Bud</div>
       <p class="section-body rev">We gathered early feedback on the stamp card concept using a Rose, Thorn, Bud framework with the PQI team</p>
       <div class="rtb-grid rev">
@@ -686,8 +686,11 @@
         </div>
       </div>
       <p class="rtb-takeaway rev">From this evaluation, it became clear that a successful solution must ensure incentives are clear and motivating, simplicity reduces training fatigue, and the design supports diverse user needs.</p>
+    </section>
 
-      <div class="section-eyebrow rev" style="margin-top: 64px;">User Persona</div>
+    <!-- ── USER PERSONA ── -->
+    <section class="cs-section" id="persona">
+      <div class="section-eyebrow rev">User Persona</div>
       <p class="section-body rev">From there, we created a persona to guide our design decisions</p>
       <p class="section-sub rev" style="margin-top: 16px;">Our research pointed to a consistent profile which is an early-career physician who sees value in PQI but struggles to stay engaged without a clear reason to. We used this to ground every design decision that followed.</p>
 
@@ -828,7 +831,7 @@
 
     <!-- ── FINAL DESIGNS ── -->
     <section class="cs-section" id="final">
-      <div class="section-eyebrow rev">Final Designs</div>
+      <div class="section-eyebrow rev">Prototype</div>
       <p class="section-body rev">The mobile rewards app is ready for development.</p>
       <p class="section-sub rev">Over the course of this project, I designed the full end-to-end mobile experience from onboarding to rewards redemption and built micro-interactions that make earning and tracking points feel intuitive and motivating. Try our prototype to see it in action (Press "R" to restart).</p>
 
@@ -853,10 +856,10 @@
           Chanel's Library and Café
         </div>
       </a>
-      <a href="foodstash.html" class="proj-next">
+      <a href="blaire.html" class="proj-next">
         <div class="proj-dir-label">Next Work</div>
         <div class="proj-name-row">
-          Food Stash Foundation
+          Blaire
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/></svg>
         </div>
       </a>
@@ -908,16 +911,20 @@
   }
 
   /* ── Active Sidebar Dot ── */
-  const sections = document.querySelectorAll('section[id]');
+  const sections = Array.from(document.querySelectorAll('section[id]'));
   const navItems = document.querySelectorAll('.sidebar-nav-item');
-  const sectionIO = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navItems.forEach(item => item.classList.toggle('active', item.dataset.section === entry.target.id));
-      }
+  function updateNav() {
+    const scrollY = window.scrollY + 120;
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.offsetTop <= scrollY) current = s;
+    }
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.dataset.section === current.id);
     });
-  }, { threshold: 0.25, rootMargin: '-72px 0px -40% 0px' });
-  sections.forEach(s => sectionIO.observe(s));
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
 
   /* ── Hide nav on scroll down, show on scroll up ── */
   let lastScrollY = 0;
