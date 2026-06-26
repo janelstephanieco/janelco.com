@@ -91,20 +91,17 @@
       width: 100%; margin: 0; padding: 0;
     }
     .sidebar-nav-item {
-      display: flex !important; align-items: flex-start !important; gap: 12px;
+      display: flex !important; align-items: center !important; gap: 12px;
       padding: 7px 0; text-decoration: none;
       position: static; margin: 0; height: auto !important;
     }
     .dot {
-      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
-      background: #d4cfc8; transition: background 0.25s, transform 0.25s;
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+      background: #c8c4bc; transition: background 0.25s, transform 0.25s;
       margin-right: 0;
     }
     .sidebar-nav-item.active .dot { background: #E99DAC; transform: scale(1.3); }
     .sidebar-nav-item:hover .dot { background: #F6C8D1; }
-    .dot-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; padding-top: 2px; }
-    .dot-line { width: 1px; height: 18px; background: #e0dcd6; margin-top: 4px; }
-    .sidebar-nav-item:last-child .dot-line { display: none; }
     .dot-label {
       font-size: 11px; font-weight: 400; color: #bbb8b2;
       letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.25s;
@@ -364,14 +361,14 @@
     <div class="sidebar-eyebrow">Case Study</div>
     <div class="sidebar-project">Food Stash Foundation</div>
     <div class="sidebar-nav">
-      <a href="#overview"  class="sidebar-nav-item" data-section="overview"><span class="dot-col"><span class="dot"></span><span class="dot-line"></span></span><span class="dot-label">Overview</span></a>
-      <a href="#gap"       class="sidebar-nav-item" data-section="gap"><span class="dot-col"><span class="dot"></span><span class="dot-line"></span></span><span class="dot-label">The Problem</span></a>
-      <a href="#solution"  class="sidebar-nav-item" data-section="solution"><span class="dot-col"><span class="dot"></span><span class="dot-line"></span></span><span class="dot-label">The Solution</span></a>
-      <a href="#visual"    class="sidebar-nav-item" data-section="visual"><span class="dot-col"><span class="dot"></span><span class="dot-line"></span></span><span class="dot-label">Visual System</span></a>
-      <a href="#process"   class="sidebar-nav-item" data-section="process"><span class="dot-col"><span class="dot"></span><span class="dot-line"></span></span><span class="dot-label">The Process</span></a>
-      <a href="#designs"   class="sidebar-nav-item" data-section="designs"><span class="dot-col"><span class="dot"></span><span class="dot-line"></span></span><span class="dot-label">Final Designs</span></a>
-      <a href="#video"     class="sidebar-nav-item" data-section="video"><span class="dot-col"><span class="dot"></span><span class="dot-line"></span></span><span class="dot-label">Video Demo</span></a>
-      <a href="#takeaways" class="sidebar-nav-item" data-section="takeaways"><span class="dot-col"><span class="dot"></span><span class="dot-line"></span></span><span class="dot-label">Key Takeaways</span></a>
+      <a href="#overview"  class="sidebar-nav-item" data-section="overview"><span class="dot"></span><span class="dot-label">Overview</span></a>
+      <a href="#gap"       class="sidebar-nav-item" data-section="gap"><span class="dot"></span><span class="dot-label">The Problem</span></a>
+      <a href="#solution"  class="sidebar-nav-item" data-section="solution"><span class="dot"></span><span class="dot-label">The Solution</span></a>
+      <a href="#visual"    class="sidebar-nav-item" data-section="visual"><span class="dot"></span><span class="dot-label">Visual System</span></a>
+      <a href="#process"   class="sidebar-nav-item" data-section="process"><span class="dot"></span><span class="dot-label">The Process</span></a>
+      <a href="#designs"   class="sidebar-nav-item" data-section="designs"><span class="dot"></span><span class="dot-label">Final Designs</span></a>
+      <a href="#video"     class="sidebar-nav-item" data-section="video"><span class="dot"></span><span class="dot-label">Video Demo</span></a>
+      <a href="#takeaways" class="sidebar-nav-item" data-section="takeaways"><span class="dot"></span><span class="dot-label">Key Takeaways</span></a>
     </div>
   </aside>
 
